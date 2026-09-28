@@ -27,7 +27,7 @@ La API queda disponible por defecto en:
 http://localhost:8080
 ```
 
-Si el puerto 8080 está ocupado, puedes cambiarlo al arrancar:
+Si el puerto 8080 está ocupado, puedes cambiarlo al 8081 al arrancar:
 
 ```bash
 java -jar target/todo-api.jar --server.port=8081
