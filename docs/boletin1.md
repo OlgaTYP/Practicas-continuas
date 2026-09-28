@@ -170,6 +170,6 @@ La ejecución satisfactoria de la comprobación de formato confirma que el proye
 
 ## 5. Conclusión
 
-El Boletín 1 ha servido para poner en práctica los pilares básicos del trabajo con proyectos Java y Git: preparación del entorno, generación del proyecto, validación local, control de versiones, automatización del estilo y resolución de conflictos. La combinación de estas tareas refleja un flujo de trabajo muy cercano al desarrollo profesional, y permite dejar el repositorio en un estado ordenado, reproducible y listo para seguir ampliando la aplicación.
+El Boletín 1 ha servido para poner en práctica los conceptos básicos del trabajo con proyectos Java y Git: preparación del entorno, generación del proyecto, validación local, control de versiones, automatización del estilo y resolución de conflictos. La combinación de estas tareas refleja un flujo de trabajo muy cercano al desarrollo profesional, y permite dejar el repositorio en un estado ordenado, reproducible y listo para seguir ampliando la aplicación.
 
-Además, la integración de la IA en la generación del proyecto y la documentación ha permitido acelerar el proceso, siempre con revisión humana y criterio técnico para asegurar que el resultado cumpla los requisitos de la práctica.
+Además, la integración de la IA en la generación del proyecto y la documentación ha permitido acelerar el proceso, siempre con revisión y criterio técnico para asegurar que el resultado cumpla los requisitos de la práctica.
