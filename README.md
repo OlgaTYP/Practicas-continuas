@@ -45,6 +45,38 @@ http://localhost:8081
 java -jar target/todo-api.jar
 ```
 
+## Formateo automático con Spotless
+
+Este proyecto usa Spotless para mantener un único estilo Java en todo el repositorio. Puedes comprobarlo con:
+
+```bash
+mvn spotless:check
+```
+
+Y aplicar el formato automáticamente con:
+
+```bash
+mvn spotless:apply
+```
+
+### Hook de pre-commit
+
+Para que cada commit se formatee antes de guardarse, el repositorio usa un hook local en `.githooks`:
+
+```bash
+mkdir -p .githooks
+cat > .githooks/pre-commit <<'EOF'
+#!/bin/sh
+echo "Formatting with Spotless..."
+mvn -q spotless:apply || exit 1
+git add -u
+EOF
+chmod +x .githooks/pre-commit
+git config core.hooksPath .githooks
+```
+
+Esto hace que el hook viaje con el repositorio y cada persona que lo clone tenga que ejecutar ese `git config` una vez. El hook puede saltarse con `git commit --no-verify`, pero en CI debe quedarse como comprobación obligatoria para evitar commits sin formatear.
+
 ## Base URL
 
 ```text
