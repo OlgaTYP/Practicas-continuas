@@ -1,2 +1,16 @@
-# Toda la aplicación la revisa el equipo
+# Revisores globales del proyecto
 *               @OlgaTYP @rmbgeuskadi
+
+# Revisión específica por rutas principales
+src/main/java/com/example/todoapi/controller/**    @OlgaTYP
+src/main/java/com/example/todoapi/service/**      @OlgaTYP
+src/main/java/com/example/todoapi/model/**         @rmbgeuskadi
+src/main/java/com/example/todoapi/exception/**    @rmbgeuskadi
+src/main/java/com/example/todoapi/repository/**   @rmbgeuskadi
+src/test/java/**                                  @OlgaTYP @rmbgeuskadi
+
+# Documentación y configuración
+README.md              @OlgaTYP
+CONTRIBUTING.md       @OlgaTYP
+docs/**               @OlgaTYP @rmbgeuskadi
+.github/**            @OlgaTYP @rmbgeuskadi

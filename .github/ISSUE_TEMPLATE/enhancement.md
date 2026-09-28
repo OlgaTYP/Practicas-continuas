@@ -38,3 +38,4 @@ Añade ejemplos, enlaces, capturas, diseños o cualquier otra información que a
 - [ ] He incluido los casos de uso relevantes.
 - [ ] He añadido alternativas, evidencias o contexto cuando resultan útiles.
 
+
