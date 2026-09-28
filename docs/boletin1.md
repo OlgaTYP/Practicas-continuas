@@ -118,16 +118,55 @@ Este ejercicio fue muy útil porque refleja un escenario real de trabajo colabor
 
 ## 4. Capturas de pantalla y evidencias visuales
 
-La evidencia de la práctica quedó reflejada principalmente en la consola y en el historial de Git, por lo que no fue necesario añadir capturas de pantalla de los cambios en el código. Sin embargo, los resultados relevantes fueron:
+Aunque la validación principal del boletín se realizó mediante la terminal, resulta útil incluir una pequeña prueba visual de la evidencia más relevante del trabajo con Git y del flujo de la práctica.
 
-- salida de `git --version`, `java -version` y `mvn -version`
-- ejecución satisfactoria de `mvn clean package`
-- arranque de la aplicación con `java -jar target/*.jar`
-- salida de `mvn spotless:check` con formato correcto
-- mensaje del hook ejecutándose en commit
-- historial final con merges y conflictos resueltos
+### 4.1 Historial del repositorio y ramas
 
-Dado que la práctica se han validado principalmente con comandos de consola y commits reales, las evidencias quedan integradas en la historia del repositorio y en la propia ejecución del proyecto.
+```text
+* bd1cda7 (HEAD -> main) docs(boletin): añade boletin1 en docs
+* 42650ec docs(boletin): elimina documentacion genérica y deja boletin1 en docs
+* 9226c71 docs(project): añade documentación final de la práctica
+* e00759c merge: resuelve conflicto en README
+* a635cf6 (feature/conflict-b) feat(readme): cambia titulo en rama B
+* 34e4555 (feature/conflict-a) feat(readme): cambia titulo en rama A
+* d96108b test(hook): autoformatea con Spotless
+* 4b2d9fb chore(hooks): añade hook de pre-commit con Spotless
+* feae1a1 chore(build): añade Spotless para formateo automático
+* 665dc1a (feat/descripcion-feat) docs(api): añade endpoints y ejemplos JSON
+* 943de0d chore(editor): añade .editorconfig
+* 1bb3b87 chore: proyecto Maven inicial de la API de tareas
+```
+
+Esta captura permite observar la rama principal y las ramas colaborativas creadas para provocar el conflicto de merge.
+
+### 4.2 Conflicto de merge resuelto
+
+```text
+Auto-merging README.md
+CONFLICT (content): Merge conflict in README.md
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+Este mensaje refleja el punto en el que Git detecta que dos ramas han modificado la misma línea y exige una resolución manual. La resolución posterior se hizo editando el archivo para eliminar los marcadores de conflicto y dejar la versión final correcta.
+
+### 4.3 Validación del hook de pre-commit
+
+```text
+Formatting with Spotless...
+[main d96108b] test(hook): autoformatea con Spotless
+```
+
+Este resultado muestra cómo el hook de Git ejecuta el formateo antes de confirmar el commit, asegurando que el código queda ya limpio antes de almacenarse en el repositorio.
+
+### 4.4 Formateo con Spotless
+
+```text
+[INFO] --- spotless:2.43.0:check (default-cli) @ todo-api ---
+[INFO] Spotless.Java is keeping 15 files clean - 0 needs changes to be clean
+[INFO] BUILD SUCCESS
+```
+
+La ejecución satisfactoria de la comprobación de formato confirma que el proyecto queda en un estado consistente y que el estilo de código se mantiene automáticamente.
 
 ## 5. Conclusión
 
