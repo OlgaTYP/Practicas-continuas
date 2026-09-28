@@ -1,4 +1,4 @@
-# Todo API - Rama A
+# Todo API - Rama A y B (resuelto)
 
 API REST para gestionar tareas con Spring Boot y almacenamiento en memoria.
 
