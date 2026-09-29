@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -47,6 +48,13 @@ public class GlobalExceptionHandler {
             .orElse("Constraint validation failed");
     return buildError(
         HttpStatus.BAD_REQUEST, "Validation Failed", message, request.getRequestURI());
+  }
+
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  public ResponseEntity<ApiError> handleTypeMismatch(
+      MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
+    String message = "Invalid value '" + ex.getValue() + "' for parameter '" + ex.getName() + "'";
+    return buildError(HttpStatus.BAD_REQUEST, "Bad Request", message, request.getRequestURI());
   }
 
   private ResponseEntity<ApiError> buildError(
