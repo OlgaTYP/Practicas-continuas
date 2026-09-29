@@ -2,6 +2,7 @@ package com.example.todoapi.controller;
 
 import com.example.todoapi.dto.TaskRequest;
 import com.example.todoapi.model.Task;
+import com.example.todoapi.model.TaskStatus;
 import com.example.todoapi.service.TaskService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -27,8 +28,8 @@ public class TaskController {
   }
 
   @GetMapping
-  public List<Task> getAllTasks() {
-    return taskService.getAllTasks();
+  public List<Task> getAllTasks(@RequestParam(required = false) TaskStatus status) {
+    return taskService.getAllTasks(status);
   }
 
   @GetMapping("/{id}")
