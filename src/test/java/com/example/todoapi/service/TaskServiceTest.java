@@ -17,11 +17,15 @@ import com.example.todoapi.model.TaskStatus;
 import com.example.todoapi.repository.TaskRepository;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+
+
 
 @ExtendWith(MockitoExtension.class)
 class TaskServiceTest {
@@ -107,6 +111,33 @@ class TaskServiceTest {
 
     assertTrue(exception.getMessage().contains("Task with id 42"));
   }
+
+    @Test
+    void getAllTasks_withoutFilter_returnsAllTasks() {
+        Task todoTask = buildTask(LocalDate.now().plusDays(2));
+        todoTask.setStatus(TaskStatus.TODO);
+        Task doneTask = buildTask(LocalDate.now().plusDays(3));
+        doneTask.setStatus(TaskStatus.DONE);
+        when(taskRepository.findAll()).thenReturn(List.of(todoTask, doneTask));
+
+        List<Task> tasks = taskService.getAllTasks(null);
+
+        assertEquals(2, tasks.size());
+    }
+
+    @Test
+    void getAllTasks_withStatusFilter_returnsOnlyMatchingTasks() {
+        Task todoTask = buildTask(LocalDate.now().plusDays(2));
+        todoTask.setStatus(TaskStatus.TODO);
+        Task doneTask = buildTask(LocalDate.now().plusDays(3));
+        doneTask.setStatus(TaskStatus.DONE);
+        when(taskRepository.findAll()).thenReturn(List.of(todoTask, doneTask));
+
+        List<Task> tasks = taskService.getAllTasks(TaskStatus.TODO);
+
+        assertEquals(1, tasks.size());
+        assertEquals(TaskStatus.TODO, tasks.get(0).getStatus());
+    }
 
   private Task buildTask(LocalDate deadline) {
     Task task = new Task();
