@@ -89,13 +89,27 @@ Esto hace que el hook viaje con el repositorio y cada persona que lo clone tenga
 
 - Método: GET
 - Ruta: `/api/tasks`
-- Descripción: devuelve la lista completa de tareas.
+- Descripción: devuelve las tareas y permite filtrar opcionalmente por estado, prioridad y texto del título. Los filtros se pueden combinar.
 
 Ejemplo:
 
 ```bash
 curl http://localhost:8080/api/tasks
 ```
+
+Ejemplo de búsqueda parcial del título (sin distinguir entre mayúsculas y minúsculas):
+
+```bash
+curl "http://localhost:8080/api/tasks?title=revisi%C3%B3n"
+```
+
+Los filtros pueden combinarse, por ejemplo:
+
+```bash
+curl "http://localhost:8080/api/tasks?status=TODO&priority=HIGH&title=sprint"
+```
+
+Si no hay tareas coincidentes, la API devuelve `200 OK` con una lista vacía.
 
 Respuesta esperada (ejemplo):
 
@@ -341,4 +355,3 @@ curl -X PUT http://localhost:8080/api/tasks/1/done
 - Java: 21
 - Persistencia: memoria (ConcurrentHashMap)
 - Puerto por defecto: 8080
-

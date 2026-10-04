@@ -64,32 +64,39 @@ class TaskControllerTest {
   }
 
   @Test
-  void getAllTasks_withStatusParam_passesFilterToService() throws Exception {
-    when(taskService.getAllTasks(TaskStatus.DONE, null)).thenReturn(List.of());
+  void getAllTasks_withFilters_passesFiltersToService() throws Exception {
+    when(taskService.getAllTasks(TaskStatus.DONE, TaskPriority.URGENT, "review"))
+        .thenReturn(List.of());
 
-    mockMvc.perform(get("/api/tasks").param("status", "DONE")).andExpect(status().isOk());
+    mockMvc
+        .perform(
+            get("/api/tasks")
+                .param("status", "DONE")
+                .param("priority", "URGENT")
+                .param("title", "review"))
+        .andExpect(status().isOk());
 
-    verify(taskService).getAllTasks(TaskStatus.DONE, null);
+    verify(taskService).getAllTasks(TaskStatus.DONE, TaskPriority.URGENT, "review");
   }
 
   @Test
   void getAllTasks_withPriorityParam_passesFilterToService() throws Exception {
-    when(taskService.getAllTasks(null, TaskPriority.HIGH)).thenReturn(List.of());
+    when(taskService.getAllTasks(null, TaskPriority.HIGH, null)).thenReturn(List.of());
 
     mockMvc.perform(get("/api/tasks").param("priority", "HIGH")).andExpect(status().isOk());
 
-    verify(taskService).getAllTasks(null, TaskPriority.HIGH);
+    verify(taskService).getAllTasks(null, TaskPriority.HIGH, null);
   }
 
   @Test
   void getAllTasks_withStatusAndPriorityParams_passesBothFiltersToService() throws Exception {
-    when(taskService.getAllTasks(TaskStatus.TODO, TaskPriority.HIGH)).thenReturn(List.of());
+    when(taskService.getAllTasks(TaskStatus.TODO, TaskPriority.HIGH, null)).thenReturn(List.of());
 
     mockMvc
         .perform(get("/api/tasks").param("status", "TODO").param("priority", "HIGH"))
         .andExpect(status().isOk());
 
-    verify(taskService).getAllTasks(TaskStatus.TODO, TaskPriority.HIGH);
+    verify(taskService).getAllTasks(TaskStatus.TODO, TaskPriority.HIGH, null);
   }
 
   @Test

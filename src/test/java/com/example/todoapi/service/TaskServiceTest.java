@@ -117,7 +117,7 @@ class TaskServiceTest {
     doneTask.setStatus(TaskStatus.DONE);
     when(taskRepository.findAll()).thenReturn(List.of(todoTask, doneTask));
 
-    List<Task> tasks = taskService.getAllTasks(null, null);
+    List<Task> tasks = taskService.getAllTasks(null, null, null);
 
     assertEquals(2, tasks.size());
   }
@@ -130,10 +130,65 @@ class TaskServiceTest {
     doneTask.setStatus(TaskStatus.DONE);
     when(taskRepository.findAll()).thenReturn(List.of(todoTask, doneTask));
 
-    List<Task> tasks = taskService.getAllTasks(TaskStatus.TODO, null);
+    List<Task> tasks = taskService.getAllTasks(TaskStatus.TODO, null, null);
 
     assertEquals(1, tasks.size());
     assertEquals(TaskStatus.TODO, tasks.get(0).getStatus());
+  }
+
+  @Test
+  void getAllTasks_withTitleFilter_ignoresCaseAndMatchesPartially() {
+    Task matchingTask = buildTask(LocalDate.now().plusDays(2));
+    matchingTask.setTitle("Prepare Sprint Review");
+    Task nonMatchingTask = buildTask(LocalDate.now().plusDays(3));
+    nonMatchingTask.setTitle("Write documentation");
+    when(taskRepository.findAll()).thenReturn(List.of(matchingTask, nonMatchingTask));
+
+    List<Task> tasks = taskService.getAllTasks(null, null, "sPrInT");
+
+    assertEquals(1, tasks.size());
+    assertEquals("Prepare Sprint Review", tasks.get(0).getTitle());
+  }
+
+  @Test
+  void getAllTasks_withCombinedFilters_returnsOnlyTasksMatchingEveryFilter() {
+    Task matchingTask = buildTask(LocalDate.now().plusDays(2));
+    matchingTask.setTitle("Prepare Sprint Review");
+    matchingTask.setStatus(TaskStatus.TODO);
+    matchingTask.setPriority(TaskPriority.HIGH);
+
+    Task wrongStatusTask = buildTask(LocalDate.now().plusDays(3));
+    wrongStatusTask.setTitle("Prepare Sprint Review");
+    wrongStatusTask.setStatus(TaskStatus.DONE);
+    wrongStatusTask.setPriority(TaskPriority.HIGH);
+
+    Task wrongPriorityTask = buildTask(LocalDate.now().plusDays(4));
+    wrongPriorityTask.setTitle("Prepare Sprint Review");
+    wrongPriorityTask.setStatus(TaskStatus.TODO);
+    wrongPriorityTask.setPriority(TaskPriority.LOW);
+
+    Task wrongTitleTask = buildTask(LocalDate.now().plusDays(5));
+    wrongTitleTask.setTitle("Write documentation");
+    wrongTitleTask.setStatus(TaskStatus.TODO);
+    wrongTitleTask.setPriority(TaskPriority.HIGH);
+
+    when(taskRepository.findAll())
+        .thenReturn(List.of(matchingTask, wrongStatusTask, wrongPriorityTask, wrongTitleTask));
+
+    List<Task> tasks = taskService.getAllTasks(TaskStatus.TODO, TaskPriority.HIGH, "sprint");
+
+    assertEquals(1, tasks.size());
+    assertEquals("Prepare Sprint Review", tasks.get(0).getTitle());
+  }
+
+  @Test
+  void getAllTasks_withTitleFilterWithoutMatches_returnsEmptyList() {
+    Task task = buildTask(LocalDate.now().plusDays(2));
+    when(taskRepository.findAll()).thenReturn(List.of(task));
+
+    List<Task> tasks = taskService.getAllTasks(null, null, "missing");
+
+    assertTrue(tasks.isEmpty());
   }
 
   @Test
@@ -144,7 +199,7 @@ class TaskServiceTest {
     lowPriorityTask.setPriority(TaskPriority.LOW);
     when(taskRepository.findAll()).thenReturn(List.of(highPriorityTask, lowPriorityTask));
 
-    List<Task> tasks = taskService.getAllTasks(null, TaskPriority.HIGH);
+    List<Task> tasks = taskService.getAllTasks(null, TaskPriority.HIGH, null);
 
     assertEquals(1, tasks.size());
     assertEquals(TaskPriority.HIGH, tasks.get(0).getPriority());
@@ -164,7 +219,7 @@ class TaskServiceTest {
     when(taskRepository.findAll())
         .thenReturn(List.of(matchingTask, wrongStatusTask, wrongPriorityTask));
 
-    List<Task> tasks = taskService.getAllTasks(TaskStatus.TODO, TaskPriority.HIGH);
+    List<Task> tasks = taskService.getAllTasks(TaskStatus.TODO, TaskPriority.HIGH, null);
 
     assertEquals(1, tasks.size());
     assertEquals(TaskStatus.TODO, tasks.get(0).getStatus());

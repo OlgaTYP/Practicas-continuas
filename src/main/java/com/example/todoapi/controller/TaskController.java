@@ -32,8 +32,9 @@ public class TaskController {
   @GetMapping
   public List<Task> getAllTasks(
       @RequestParam(required = false) TaskStatus status,
-      @RequestParam(required = false) TaskPriority priority) {
-    return taskService.getAllTasks(status, priority);
+      @RequestParam(required = false) TaskPriority priority,
+      @RequestParam(required = false) String title) {
+    return taskService.getAllTasks(status, priority, title);
   }
 
   @GetMapping("/{id}")
