@@ -20,12 +20,15 @@ public class TaskService {
     this.taskRepository = taskRepository;
   }
 
-  public List<Task> getAllTasks(TaskStatus status) {
+  public List<Task> getAllTasks(TaskStatus status, TaskPriority priority) {
     List<Task> tasks = taskRepository.findAll();
-    if (status == null) {
+    if (status == null && priority == null) {
       return tasks;
     }
-    return tasks.stream().filter(task -> task.getStatus() == status).toList();
+    return tasks.stream()
+        .filter(task -> status == null || task.getStatus() == status)
+        .filter(task -> priority == null || task.getPriority() == priority)
+        .toList();
   }
 
   public Task getTaskById(Long id) {
