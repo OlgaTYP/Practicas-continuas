@@ -80,9 +80,36 @@ class TaskControllerTest {
   }
 
   @Test
+  void getAllTasks_withPriorityParam_passesFilterToService() throws Exception {
+    when(taskService.getAllTasks(null, TaskPriority.HIGH, null)).thenReturn(List.of());
+
+    mockMvc.perform(get("/api/tasks").param("priority", "HIGH")).andExpect(status().isOk());
+
+    verify(taskService).getAllTasks(null, TaskPriority.HIGH, null);
+  }
+
+  @Test
+  void getAllTasks_withStatusAndPriorityParams_passesBothFiltersToService() throws Exception {
+    when(taskService.getAllTasks(TaskStatus.TODO, TaskPriority.HIGH, null)).thenReturn(List.of());
+
+    mockMvc
+        .perform(get("/api/tasks").param("status", "TODO").param("priority", "HIGH"))
+        .andExpect(status().isOk());
+
+    verify(taskService).getAllTasks(TaskStatus.TODO, TaskPriority.HIGH, null);
+  }
+
+  @Test
   void getAllTasks_withInvalidStatus_returnsBadRequest() throws Exception {
     mockMvc
         .perform(get("/api/tasks").param("status", "NOT_A_STATUS"))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void getAllTasks_withInvalidPriority_returnsBadRequest() throws Exception {
+    mockMvc
+        .perform(get("/api/tasks").param("priority", "NOT_A_PRIORITY"))
         .andExpect(status().isBadRequest());
   }
 }
