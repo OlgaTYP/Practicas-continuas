@@ -9,6 +9,7 @@ import com.example.todoapi.repository.TaskRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,12 +21,18 @@ public class TaskService {
     this.taskRepository = taskRepository;
   }
 
-  public List<Task> getAllTasks(TaskStatus status) {
-    List<Task> tasks = taskRepository.findAll();
-    if (status == null) {
-      return tasks;
-    }
-    return tasks.stream().filter(task -> task.getStatus() == status).toList();
+  public List<Task> getAllTasks(TaskStatus status, TaskPriority priority, String title) {
+    String titleFilter =
+        title == null || title.isBlank() ? null : title.trim().toLowerCase(Locale.ROOT);
+
+    return taskRepository.findAll().stream()
+        .filter(task -> status == null || task.getStatus() == status)
+        .filter(task -> priority == null || task.getPriority() == priority)
+        .filter(
+            task ->
+                titleFilter == null
+                    || task.getTitle().toLowerCase(Locale.ROOT).contains(titleFilter))
+        .toList();
   }
 
   public Task getTaskById(Long id) {

@@ -64,12 +64,19 @@ class TaskControllerTest {
   }
 
   @Test
-  void getAllTasks_withStatusParam_passesFilterToService() throws Exception {
-    when(taskService.getAllTasks(TaskStatus.DONE)).thenReturn(List.of());
+  void getAllTasks_withFilters_passesFiltersToService() throws Exception {
+    when(taskService.getAllTasks(TaskStatus.DONE, TaskPriority.URGENT, "review"))
+        .thenReturn(List.of());
 
-    mockMvc.perform(get("/api/tasks").param("status", "DONE")).andExpect(status().isOk());
+    mockMvc
+        .perform(
+            get("/api/tasks")
+                .param("status", "DONE")
+                .param("priority", "URGENT")
+                .param("title", "review"))
+        .andExpect(status().isOk());
 
-    verify(taskService).getAllTasks(TaskStatus.DONE);
+    verify(taskService).getAllTasks(TaskStatus.DONE, TaskPriority.URGENT, "review");
   }
 
   @Test
