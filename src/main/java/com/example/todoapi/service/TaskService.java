@@ -45,7 +45,7 @@ public class TaskService {
     LocalDateTime now = LocalDateTime.now();
     task.setId(null);
     task.setStatus(task.getStatus() == null ? TaskStatus.TODO : task.getStatus());
-    task.setPriority(task.getPriority() == null ? TaskPriority.MEDIUM : task.getPriority());
+    task.setPriority(task.getPriority() == null ? TaskPriority.HIGH : task.getPriority());
     task.setCreatedAt(now);
     task.setUpdatedAt(now);
 
