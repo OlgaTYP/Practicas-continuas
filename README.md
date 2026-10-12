@@ -1,16 +1,32 @@
 # Todo API - Rama A y B (resuelto)
 
-API REST para gestionar tareas con Spring Boot y almacenamiento en memoria.
+API REST para gestionar tareas con Spring Boot, Spring Data JPA y PostgreSQL.
 
 ## Descripción
 
-Esta aplicación permite crear, consultar, actualizar, eliminar y marcar tareas como completadas. Los datos se guardan en memoria durante la ejecución del proceso; al reiniciar la aplicación, la colección de tareas se reinicia.
+Esta aplicación permite crear, consultar, actualizar, eliminar y marcar tareas como completadas. Los datos se persisten en PostgreSQL mediante Spring Data JPA y Hibernate.
 
 ## Requisitos
 
 - Java 21+
 - Maven 3.9+
+- PostgreSQL 16+
 - Sistema operativo compatible con Java
+
+## Configurar PostgreSQL
+
+La aplicación espera una base de datos `todo_api` en `localhost:5432`. Para levantar una instancia local de desarrollo con Docker:
+
+```bash
+docker run --name todo-postgres \
+  -e POSTGRES_DB=todo_api \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -p 5432:5432 \
+  -d postgres:16
+```
+
+La URL, el usuario y la contraseña se pueden personalizar mediante `DB_URL`, `DB_USERNAME` y `DB_PASSWORD`. Los valores predeterminados (`postgres`/`postgres`) son solo para desarrollo local; utiliza credenciales seguras fuera de ese entorno. Hibernate actualiza el esquema existente al iniciar (`spring.jpa.hibernate.ddl-auto=update`).
 
 ## Arranque
 
@@ -327,10 +343,6 @@ Ejemplo de error de validación:
 }
 ```
 
-## Nota importante
-
-La API usa un repositorio en memoria, por lo que los datos desaparecen al reiniciar la aplicación.
-
 ## Ejemplo rápido de flujo completo
 
 ```bash
@@ -353,5 +365,5 @@ curl -X PUT http://localhost:8080/api/tasks/1/done
 
 - Framework: Spring Boot 3.3.4
 - Java: 21
-- Persistencia: memoria (ConcurrentHashMap)
+- Persistencia: PostgreSQL mediante Spring Data JPA y Hibernate
 - Puerto por defecto: 8080
