@@ -61,6 +61,94 @@ http://localhost:8081
 java -jar target/todo-api.jar
 ```
 
+## Levantar el proyecto con Docker
+
+Requisitos: Docker Engine o Docker Desktop con Docker Compose v2.
+
+Desde la raíz del repositorio, crea el fichero de configuración a partir del ejemplo:
+
+```bash
+cp .env.example .env
+```
+
+Edita `.env` y, antes de usarlo fuera de un entorno local, cambia `POSTGRES_PASSWORD`. El ejemplo configura PostgreSQL 16 con la base de datos `tareas` y el usuario `app`.
+
+Construye la imagen de la API y levanta la base de datos y la aplicación:
+
+```bash
+docker compose up --build -d
+```
+
+Comprueba que los servicios estén activos:
+
+```bash
+docker compose ps
+```
+
+La API queda disponible en `http://localhost:8080`. Para comprobar su estado accede a `http://localhost:8080/actuator/health`, la respuesta esperada es `{"status":"UP"}.` 
+
+Para consultar los registros:
+
+```bash
+docker compose logs -f
+```
+
+Detén los servicios conservando los datos de PostgreSQL con:
+
+```bash
+docker compose down
+```
+
+Los datos se guardan en el volumen `db-data`. Para eliminar también ese volumen y todos los datos de la base de datos:
+
+```bash
+docker compose down -v
+```
+Advertencia: `docker compose down -v` elimina los datos persistidos de PostgreSQL.
+
+La imagen de la API compila con Maven 3.9 y Eclipse Temurin Java 21, y se ejecuta con Eclipse Temurin JRE 21. PostgreSQL usa la imagen `postgres:16`.
+
+## Levantar el proyecto con Dev Container
+
+### Requisitos: 
+- Docker Engine instalado y en ejecución.
+- Visual Studio Code.
+- Extensión **Dev Containers** de Microsoft.
+
+### Abrir el entorno
+Abre la raíz del repositorio en VS Code y, desde la paleta de comandos (`Ctrl+Shift+P`), selecciona **Dev Containers: Reopen in Container**. 
+
+La configuración de `.devcontainer/devcontainer.json` usa la imagen `mcr.microsoft.com/devcontainers/java:21`, instala Java 21 y Maven, y configura Docker-in-Docker. Al crear el contenedor, se copia `.env.example` a `.env` si aún no existe y se ejecuta `mvn -B dependency:go-offline` para descargar las dependencias.
+
+El fichero .env debe mantenerse en local. Este fichero no debe subirse al repositorio.
+
+### Arrancar la aplicación
+En la terminal integrada del contenedor, inicia PostgreSQL con Docker Compose:
+
+```bash
+docker compose up --build -d
+```
+Este comando construye la imagen de la API y arranca PostgreSQL y la aplicación. La API espera a que PostgreSQL esté saludable antes de iniciar.
+
+Comprueba el estado de los servicios:
+```bash
+docker compose ps
+```
+Comprueba el estado de la API en :
+```text
+http://127.0.0.1:8080/actuator/health
+```
+La respuesta esperada es `{"status":"UP"}`.
+
+Para consultar los registros:
+```bash
+docker compose logs -f
+```
+Para detener los servicios sin eliminar los datos de PostgreSQL:
+```bash
+docker compose down
+```
+Los datos de PostgreSQL se conservan en el volumen `db-data`. Para eliminar también ese volumen y los datos almacenados, utiliza `docker compose down -v` únicamente cuando quieras reiniciar la base de datos desde cero.
 ## Formateo automático con Spotless
 
 Este proyecto usa Spotless para mantener un único estilo Java en todo el repositorio. Puedes comprobarlo con:
