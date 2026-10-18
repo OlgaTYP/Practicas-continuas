@@ -1,6 +1,13 @@
 package com.example.todoapi.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,8 +16,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Entity
+@Table(name = "tasks")
 public class Task {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @NotBlank(message = "Title is required")
@@ -22,9 +33,11 @@ public class Task {
   private String description;
 
   @NotNull(message = "Status is required")
+  @Enumerated(EnumType.STRING)
   private TaskStatus status = TaskStatus.TODO;
 
   @NotNull(message = "Priority is required")
+  @Enumerated(EnumType.STRING)
   private TaskPriority priority = TaskPriority.MEDIUM;
 
   @NotNull(message = "Deadline is required")

@@ -22,6 +22,7 @@ public class TaskService {
   }
 
   public List<Task> getAllTasks(TaskStatus status, TaskPriority priority, String title) {
+    System.out.println("Obteniendo tareas...");
     String titleFilter =
         title == null || title.isBlank() ? null : title.trim().toLowerCase(Locale.ROOT);
 

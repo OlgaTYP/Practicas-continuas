@@ -1,16 +1,32 @@
 # Todo API - Rama A y B (resuelto)
 
-API REST para gestionar tareas con Spring Boot y almacenamiento en memoria.
+API REST para gestionar tareas con Spring Boot, Spring Data JPA y PostgreSQL.
 
 ## Descripción
 
-Esta aplicación permite crear, consultar, actualizar, eliminar y marcar tareas como completadas. Los datos se guardan en memoria durante la ejecución del proceso; al reiniciar la aplicación, la colección de tareas se reinicia.
+Esta aplicación permite crear, consultar, actualizar, eliminar y marcar tareas como completadas. Los datos se persisten en PostgreSQL mediante Spring Data JPA y Hibernate.
 
 ## Requisitos
 
 - Java 21+
 - Maven 3.9+
+- PostgreSQL 16+
 - Sistema operativo compatible con Java
+
+## Configurar PostgreSQL
+
+La aplicación espera una base de datos `todo_api` en `localhost:5432`. Para levantar una instancia local de desarrollo con Docker:
+
+```bash
+docker run --name todo-postgres \
+  -e POSTGRES_DB=todo_api \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -p 5432:5432 \
+  -d postgres:16
+```
+
+La URL, el usuario y la contraseña se pueden personalizar mediante `DB_URL`, `DB_USERNAME` y `DB_PASSWORD`. Los valores predeterminados (`postgres`/`postgres`) son solo para desarrollo local; utiliza credenciales seguras fuera de ese entorno. Hibernate actualiza el esquema existente al iniciar (`spring.jpa.hibernate.ddl-auto=update`).
 
 ## Arranque
 
@@ -45,6 +61,94 @@ http://localhost:8081
 java -jar target/todo-api.jar
 ```
 
+## Levantar el proyecto con Docker
+
+Requisitos: Docker Engine o Docker Desktop con Docker Compose v2.
+
+Desde la raíz del repositorio, crea el fichero de configuración a partir del ejemplo:
+
+```bash
+cp .env.example .env
+```
+
+Edita `.env` y, antes de usarlo fuera de un entorno local, cambia `POSTGRES_PASSWORD`. El ejemplo configura PostgreSQL 16 con la base de datos `tareas` y el usuario `app`.
+
+Construye la imagen de la API y levanta la base de datos y la aplicación:
+
+```bash
+docker compose up --build -d
+```
+
+Comprueba que los servicios estén activos:
+
+```bash
+docker compose ps
+```
+
+La API queda disponible en `http://localhost:8080`. Para comprobar su estado accede a `http://localhost:8080/actuator/health`, la respuesta esperada es `{"status":"UP"}.` 
+
+Para consultar los registros:
+
+```bash
+docker compose logs -f
+```
+
+Detén los servicios conservando los datos de PostgreSQL con:
+
+```bash
+docker compose down
+```
+
+Los datos se guardan en el volumen `db-data`. Para eliminar también ese volumen y todos los datos de la base de datos:
+
+```bash
+docker compose down -v
+```
+Advertencia: `docker compose down -v` elimina los datos persistidos de PostgreSQL.
+
+La imagen de la API compila con Maven 3.9 y Eclipse Temurin Java 21, y se ejecuta con Eclipse Temurin JRE 21. PostgreSQL usa la imagen `postgres:16`.
+
+## Levantar el proyecto con Dev Container
+
+### Requisitos: 
+- Docker Engine instalado y en ejecución.
+- Visual Studio Code.
+- Extensión **Dev Containers** de Microsoft.
+
+### Abrir el entorno
+Abre la raíz del repositorio en VS Code y, desde la paleta de comandos (`Ctrl+Shift+P`), selecciona **Dev Containers: Reopen in Container**. 
+
+La configuración de `.devcontainer/devcontainer.json` usa la imagen `mcr.microsoft.com/devcontainers/java:21`, instala Java 21 y Maven, y configura Docker-in-Docker. Al crear el contenedor, se copia `.env.example` a `.env` si aún no existe y se ejecuta `mvn -B dependency:go-offline` para descargar las dependencias.
+
+El fichero .env debe mantenerse en local. Este fichero no debe subirse al repositorio.
+
+### Arrancar la aplicación
+En la terminal integrada del contenedor, inicia PostgreSQL con Docker Compose:
+
+```bash
+docker compose up --build -d
+```
+Este comando construye la imagen de la API y arranca PostgreSQL y la aplicación. La API espera a que PostgreSQL esté saludable antes de iniciar.
+
+Comprueba el estado de los servicios:
+```bash
+docker compose ps
+```
+Comprueba el estado de la API en :
+```text
+http://127.0.0.1:8080/actuator/health
+```
+La respuesta esperada es `{"status":"UP"}`.
+
+Para consultar los registros:
+```bash
+docker compose logs -f
+```
+Para detener los servicios sin eliminar los datos de PostgreSQL:
+```bash
+docker compose down
+```
+Los datos de PostgreSQL se conservan en el volumen `db-data`. Para eliminar también ese volumen y los datos almacenados, utiliza `docker compose down -v` únicamente cuando quieras reiniciar la base de datos desde cero.
 ## Formateo automático con Spotless
 
 Este proyecto usa Spotless para mantener un único estilo Java en todo el repositorio. Puedes comprobarlo con:
@@ -327,10 +431,6 @@ Ejemplo de error de validación:
 }
 ```
 
-## Nota importante
-
-La API usa un repositorio en memoria, por lo que los datos desaparecen al reiniciar la aplicación.
-
 ## Ejemplo rápido de flujo completo
 
 ```bash
@@ -353,5 +453,5 @@ curl -X PUT http://localhost:8080/api/tasks/1/done
 
 - Framework: Spring Boot 3.3.4
 - Java: 21
-- Persistencia: memoria (ConcurrentHashMap)
+- Persistencia: PostgreSQL mediante Spring Data JPA y Hibernate
 - Puerto por defecto: 8080
