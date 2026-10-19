@@ -1,4 +1,3 @@
-
 package com.example.todoapi.controller;
 
 import com.example.todoapi.dto.TaskRequest;
@@ -8,9 +7,7 @@ import com.example.todoapi.model.TaskStatus;
 import com.example.todoapi.service.TaskService;
 import jakarta.validation.Valid;
 import java.util.List;
-
 import org.springframework.http.HttpStatus;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,16 +42,16 @@ public class TaskController {
     return taskService.getTaskById(id);
   }
 
-    @PostMapping
-    public ResponseEntity<Task> createTask(@Valid @RequestBody TaskRequest request) {
-      Task createdTask = taskService.createTask(request.toEntity());
-      return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
-    }
+  @PostMapping
+  public ResponseEntity<Task> createTask(@Valid @RequestBody TaskRequest request) {
+    Task createdTask = taskService.createTask(request.toEntity());
+    return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
+  }
 
   @PutMapping("/{id}")
-        public Task updateTask(@PathVariable("id") Long id, @Valid @RequestBody TaskRequest request) {
+  public Task updateTask(@PathVariable("id") Long id, @Valid @RequestBody TaskRequest request) {
     return taskService.updateTask(id, request.toEntity());
-         }
+  }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteTask(@PathVariable("id") Long id) {
