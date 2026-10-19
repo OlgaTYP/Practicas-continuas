@@ -119,7 +119,7 @@ class TaskServiceTest {
 
     List<Task> tasks = taskService.getAllTasks(null, null, null);
 
-    assertEquals(3, tasks.size()); // cambio el 2 por el 3 para provocar error
+    assertEquals(2, tasks.size()); // Correccion del cambio para provocar fallo
   }
 
   @Test
