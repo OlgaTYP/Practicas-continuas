@@ -27,5 +27,3 @@ jobs:
           cache: maven
       - name: Construir y testear
         run: mvn --batch-mode verify
-        env:
-          MAVEN_OPTS: -XX:+EnableDynamicAgentLoading
