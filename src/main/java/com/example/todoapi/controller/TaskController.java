@@ -37,10 +37,10 @@ public class TaskController {
     return taskService.getAllTasks(status, priority, title);
   }
 
-        @GetMapping("/{id}")
-        public Task getTaskById(@PathVariable("id") Long id) {
-          return taskService.getTaskById(id);
-        }
+  @GetMapping("/{id}")
+  public Task getTaskById(@PathVariable("id") Long id) {
+    return taskService.getTaskById(id);
+  }
 
   @PostMapping
   public ResponseEntity<Task> createTask(@Valid @RequestBody TaskRequest request) {
@@ -48,10 +48,10 @@ public class TaskController {
     return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
   }
 
-        @PutMapping("/{id}")
-    public Task updateTask(@PathVariable("id") Long id, @Valid @RequestBody TaskRequest request) {
-      return taskService.updateTask(id, request.toEntity());
- }
+  @PutMapping("/{id}")
+  public Task updateTask(@PathVariable("id") Long id, @Valid @RequestBody TaskRequest request) {
+    return taskService.updateTask(id, request.toEntity());
+  }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteTask(@PathVariable("id") Long id) {
