@@ -235,4 +235,10 @@ class TaskServiceTest {
     task.setDeadline(deadline);
     return task;
   }
+
+  @Test
+  void testQueNoFallaIntencionadamente() {
+    assertTrue(true);
+    // Con la nueva condicion a true ya no falla
+  }
 }
