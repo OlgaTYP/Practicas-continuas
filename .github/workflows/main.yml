@@ -18,7 +18,7 @@ jobs:
       - name: Revisar cambios con Ollama Cloud
         uses: actions/github-script@v7
         env:
-          OLLAMA_API_KEY: ${{ secrets.OLLAMA_API_KEY }}
+          OLLAMA_API_KEY: ${{ secrets.OLLAMA_PC_API_KEY }}
         with:
           script: |
             const { owner, repo } = context.repo;
