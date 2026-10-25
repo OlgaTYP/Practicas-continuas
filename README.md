@@ -1,3 +1,5 @@
+[![CI](https://github.com/OlgaTYP/Practicas-continuas/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/OlgaTYP/Practicas-continuas/actions/workflows/ci.yml)
+
 # Todo API - Rama A y B (resuelto)
 
 API REST para gestionar tareas con Spring Boot, Spring Data JPA y PostgreSQL.
