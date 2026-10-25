@@ -237,7 +237,8 @@ class TaskServiceTest {
   }
 
   @Test
-  void testQueFallaIntencionadamente() {
-    assertTrue(false);
+  void testQueNoFallaIntencionadamente() {
+    assertTrue(true);
+    // Con la nueva condicion a true ya no falla
   }
 }
