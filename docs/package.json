@@ -1,0 +1,12 @@
+{
+  "name": "practicas-continuas-docs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Genera la web de la documentación (docs/site) a partir de los boletines en Markdown",
+  "scripts": {
+    "build": "node build-site.mjs"
+  },
+  "dependencies": {
+    "marked": "15.0.12"
+  }
+}
