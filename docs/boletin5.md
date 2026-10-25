@@ -9,6 +9,13 @@
 | --- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------ |
 | 1   | `ci: Añadir release - workflow`                             | Creación de `.github/workflows/release.yml`, que construye la imagen Docker y la publica en GitHub Container Registry (GHCR).          | OlgaTYP     | [39c4d98](https://github.com/OlgaTYP/Practicas-continuas/commit/39c4d98) |
 | —   | `Merge pull request #21 from OlgaTYP/feat/release-workflow` | Integración en `main` del workflow mediante el [PR #21](https://github.com/OlgaTYP/Practicas-continuas/pull/21), aprobado por OlgaTYP. | rmbgeuskadi | [7f60608](https://github.com/OlgaTYP/Practicas-continuas/commit/7f60608) |
+| 2   | `doc: Añadir boletines en docs`                             | Se traen las memorias de los boletines 1 a 5 a `docs/`.                                                                                 | OlgaTYP     | [c67eb98](https://github.com/OlgaTYP/Practicas-continuas/commit/c67eb98) |
+| 3   | `feat(docs): añade script para generar HTML`                | Script `docs/build-site.mjs`, que convierte los `.md` en HTML y genera `docs/site/index.html`, con su `package.json`.                    | OlgaTYP     | [64d8ee3](https://github.com/OlgaTYP/Practicas-continuas/commit/64d8ee3) |
+| 4   | `chore(docs): ignora los archivos HTML generados`           | `docs/site/` en el `.gitignore`.                                                                                                       | Roxana Bareiro | [10f457c](https://github.com/OlgaTYP/Practicas-continuas/commit/10f457c) |
+| 5   | `ci(pages): automatiza la publicación de documentación`     | Workflow `.github/workflows/pages.yml`, que genera la web y la publica en GitHub Pages.                                                  | Roxana Bareiro | [0b0d6ab](https://github.com/OlgaTYP/Practicas-continuas/commit/0b0d6ab) |
+| —   | `Merge pull request #22 from OlgaTYP/feat/github-pages-docs` | Integración en `main` de los commits 2 a 5 mediante el [PR #22](https://github.com/OlgaTYP/Practicas-continuas/pull/22), aprobado por OlgaTYP. | rmbgeuskadi | [18f2416](https://github.com/OlgaTYP/Practicas-continuas/commit/18f2416) |
+| 6   | `fix(pages): instala dependencia marked`                    | Paso `npm install marked` en el workflow, que fallaba porque faltaba la dependencia.                                                     | Roxana Bareiro | [177189b](https://github.com/OlgaTYP/Practicas-continuas/commit/177189b) |
+| —   | `Merge pull request #23 from OlgaTYP/feat/github-pages-docs` | Integración en `main` de la corrección mediante el [PR #23](https://github.com/OlgaTYP/Practicas-continuas/pull/23), aprobado y fusionado por OlgaTYP. | OlgaTYP | [fbb610d](https://github.com/OlgaTYP/Practicas-continuas/commit/fbb610d) |
 
 Además de los commits, en este boletín se crearon en GitHub:
 
@@ -17,6 +24,7 @@ Además de los commits, en este boletín se crearon en GitHub:
 | Etiqueta `v1.0.0`             | Etiqueta anotada sobre `7f60608`: «Primera versión publicable de la API de tareas».         | Roxana Bareiro | [v1.0.0](https://github.com/OlgaTYP/Practicas-continuas/tree/v1.0.0)                                                   |
 | Release `v1.0.0`              | _v1.0.0 — Primera versión publicable_, con notas generadas automáticamente.                 | OlgaTYP        | [Release v1.0.0](https://github.com/OlgaTYP/Practicas-continuas/releases/tag/v1.0.0)                                   |
 | Paquete `practicas-continuas` | Imagen Docker publicada en GHCR con los tags `sha-7f60608`, `latest`, `1.0.0`, `1.0` y `1`. | GitHub Actions | [ghcr.io/olgatyp/practicas-continuas](https://github.com/users/OlgaTYP/packages/container/package/practicas-continuas) |
+| Web de documentación          | Boletines publicados en GitHub Pages.                                                       | GitHub Actions | [olgatyp.github.io/Practicas-continuas](https://olgatyp.github.io/Practicas-continuas/)                                |
 
 ## Detalle por commit
 
@@ -26,6 +34,41 @@ Además de los commits, en este boletín se crearon en GitHub:
 - **Autor:** OlgaTYP. El PR #21 lo abrió rmbgeuskadi, lo aprobó OlgaTYP y lo fusionó rmbgeuskadi.
 - **Relación con el boletín:** Parte A.
 - **Uso de IA:** no se ha utilizado IA
+
+### 2. `doc: Añadir boletines en docs`
+
+- **Qué se hizo:** se añadieron a `docs/` las memorias de todas las sesiones: `boletin1A.md` y `boletin1B.md` (el Boletín 1 fue individual y hay una memoria por integrante), `boletin2.md`, `boletin3.md`, `boletin4.md` y `boletin5.md`. Se eliminó el antiguo `docs/boletin1.md`. El commit incluye además las dos correcciones de coherencia descritas en el Boletín 1: `indent_size = 2` en `.editorconfig` y el permiso de ejecución del hook `.githooks/pre-commit`.
+- **Autor:** OlgaTYP
+- **Relación con el boletín:** Parte D (traer las memorias al repositorio de la API).
+- **Uso de IA:** <!-- PENDIENTE: indicar si se usó IA en este commit -->
+
+### 3. `feat(docs): añade script para generar HTML`
+
+- **Qué se hizo:** se añadió `docs/build-site.mjs`, un script en Node que lee todos los `.md` de `docs/`, los convierte a HTML con la librería `marked` y genera en `docs/site/` una página por boletín y un `index.html` que enlaza a todos. Se añadieron también `docs/package.json` y `docs/package-lock.json` con la dependencia `marked`, y `docs/site/` y `docs/node_modules/` al `.gitignore`.
+- **Autor:** OlgaTYP
+- **Relación con el boletín:** Parte D (script de generación).
+- **Uso de IA:** se generó con ayuda de IA (Claude Code), pidiéndole un script que leyese los `.md` de `docs/` y generase un `.html` por cada uno y un `index.html` en `docs/site/`.
+
+### 4. `chore(docs): ignora los archivos HTML generados`
+
+- **Qué se hizo:** se añadió `docs/site/` al `.gitignore` para que la web generada no se suba al repositorio.
+- **Autor:** Roxana Bareiro
+- **Relación con el boletín:** Parte D.
+- **Uso de IA:** <!-- PENDIENTE: indicar si se usó IA en este commit -->
+
+### 5. `ci(pages): automatiza la publicación de documentación`
+
+- **Qué se hizo:** se creó `.github/workflows/pages.yml`, que en cada push a `main` genera la web con el script y la publica en GitHub Pages con las acciones oficiales (`configure-pages`, `upload-pages-artifact` y `deploy-pages`).
+- **Autor:** Roxana Bareiro
+- **Relación con el boletín:** Parte D (automatización).
+- **Uso de IA:** <!-- PENDIENTE: indicar si se usó IA en este commit -->
+
+### 6. `fix(pages): instala dependencia marked`
+
+- **Qué se hizo:** la primera ejecución del workflow tras fusionar el PR #22 falló en el paso *Generate documentation website*: el runner no tenía instalada la librería `marked`, que el script importa. Se añadió el paso `npm install marked` antes de generar la web, y con el PR #23 el workflow pasó a verde.
+- **Autor:** Roxana Bareiro
+- **Relación con el boletín:** Parte D.
+- **Uso de IA:** <!-- PENDIENTE: indicar si se usó IA en este commit -->
 
 ## Descripción narrativa de lo hecho en la sesión y relación con los commits
 
@@ -118,6 +161,8 @@ Los tres niveles semver permiten que cada usuario elija cuánto quiere actualiza
 
 Tras el primer push a `main`, la imagen apareció en la pestaña **Packages** del repositorio ([ghcr.io/olgatyp/practicas-continuas](https://github.com/users/OlgaTYP/packages/container/package/practicas-continuas)) con los tags `sha-7f60608` y `latest`.
 
+El comportamiento se repitió con cada fusión posterior: los merges de los PR #22 y #23 (Parte D) publicaron `sha-18f2416` y `sha-fbb610d`, y `latest` pasó a apuntar a la imagen más reciente de `main`. En cambio, `1.0.0`, `1.0` y `1` siguen apuntando a la imagen de la versión etiquetada.
+
 ### Parte B — Publicar una versión de verdad
 
 Se creó la etiqueta anotada y se subió al remoto:
@@ -195,11 +240,151 @@ docker rm -f db api && docker network rm tareas-net
 
 ### Parte D — GitHub Pages de la documentación
 
-_Pendiente de realizar._
+La web está publicada en **<https://olgatyp.github.io/Practicas-continuas/>**.
+
+#### 1. Traer las memorias a `docs/`
+
+Las memorias de cada sesión se copiaron a la carpeta `docs/` de la raíz del repositorio de la API ([c67eb98](https://github.com/OlgaTYP/Practicas-continuas/commit/c67eb98)), una por sesión entregada:
+
+```text
+docs/
+├── boletin1A.md   ← Boletín 1 (individual): memoria de Olga Yanes
+├── boletin1B.md   ← Boletín 1 (individual): memoria de Roxana Bareiro
+├── boletin2.md
+├── boletin3.md
+├── boletin4.md
+├── boletin5.md
+├── build-site.mjs
+├── package.json
+└── package-lock.json
+```
+
+#### 2. Script de generación
+
+El script `docs/build-site.mjs` ([64d8ee3](https://github.com/OlgaTYP/Practicas-continuas/commit/64d8ee3)) se escribió en Node con ayuda de IA y usa una única dependencia, [`marked`](https://www.npmjs.com/package/marked), para convertir Markdown a HTML. Lo que hace:
+
+1. Lee todos los `.md` de `docs/` y los ordena de forma natural (`boletin1A`, `boletin1B`, `boletin2`…).
+2. Convierte cada uno a HTML con soporte de GitHub Flavored Markdown (tablas, bloques de código, enlaces). Toma el título de la página del primer encabezado `#`.
+3. Envuelve cada página en una plantilla común: menú superior con todos los boletines, enlaces *anterior / siguiente* al final, estilos para modo claro y oscuro, y diseño adaptado al móvil.
+4. Reescribe los enlaces entre boletines (`boletin2.md` → `boletin2.html`) para que funcionen en la web.
+5. Genera `index.html` con una tarjeta por boletín: título y la línea de autoría (`> Pareja: …`).
+6. Si existe `docs/img/`, la copia a `docs/site/img/`, para que las capturas enlazadas desde los `.md` se vean también en la web.
+7. Borra `docs/site/` antes de generar, para que no queden páginas de boletines eliminados.
+
+**Prueba en local:**
+
+```bash
+cd docs
+npm ci
+npm run build
+```
+
+```text
+  boletin1A.md → site/boletin1A.html
+  boletin1B.md → site/boletin1B.html
+  boletin2.md → site/boletin2.html
+  boletin3.md → site/boletin3.html
+  boletin4.md → site/boletin4.html
+  boletin5.md → site/boletin5.html
+  index.html
+Web generada en .../docs/site (6 páginas + index.html)
+```
+
+Después se abrió `docs/site/index.html` en el navegador para revisar el resultado.
+
+#### 3. Ignorar la web generada
+
+`docs/site/` está en el `.gitignore` ([64d8ee3](https://github.com/OlgaTYP/Practicas-continuas/commit/64d8ee3), [10f457c](https://github.com/OlgaTYP/Practicas-continuas/commit/10f457c)), junto con `docs/node_modules/`. La web es un resultado de build: se regenera a partir de los `.md` en cada publicación, así que versionarla solo duplicaría contenido y provocaría conflictos.
+
+#### 4. Workflow de publicación
+
+`.github/workflows/pages.yml` ([0b0d6ab](https://github.com/OlgaTYP/Practicas-continuas/commit/0b0d6ab), corregido en [177189b](https://github.com/OlgaTYP/Practicas-continuas/commit/177189b)):
+
+```yaml
+name: Publish documentation to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install marked
+
+      - name: Generate documentation website
+        run: node docs/build-site.mjs
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs/site/
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+- **Disparadores:** cada push a `main` y, con `workflow_dispatch`, también a mano desde la pestaña *Actions*.
+- **`permissions`:** `pages: write` para publicar e `id-token: write` para que `deploy-pages` se autentique con un token OIDC. No hace falta ningún secreto.
+- **`concurrency: pages`:** si llegan dos pushes seguidos, solo se publica la versión más reciente.
+- **Job `build`:** instala Node 22 y `marked`, ejecuta el script y sube `docs/site/` como artefacto de Pages (`upload-pages-artifact`).
+- **Job `deploy`:** espera a `build` (`needs`) y publica el artefacto con `deploy-pages` en el entorno `github-pages`. La URL publicada aparece en el resumen de la ejecución.
+
+#### 5. Configuración del repositorio
+
+- El repositorio es **público**, condición necesaria para GitHub Pages en una cuenta gratuita.
+- En *Settings → Pages* se cambió **Source** a **GitHub Actions**, para que publique el workflow en lugar de una rama.
+
+#### 6. Publicación y corrección
+
+| Ejecución | Commit | Resultado |
+|-----------|--------|-----------|
+| Merge del PR #22 | `18f2416` | ❌ [failure](https://github.com/OlgaTYP/Practicas-continuas/actions/runs/40231217234): falla el paso *Generate documentation website* |
+| Merge del PR #23 | `fbb610d` | ✅ [success](https://github.com/OlgaTYP/Practicas-continuas/actions/runs/40233030276): `build` y `deploy` correctos |
+
+La primera ejecución falló porque el runner parte de una máquina limpia y el script importa `marked`, que no estaba instalada. En local funcionaba porque `docs/node_modules/` ya existía. Se corrigió añadiendo el paso `Install dependencies` ([177189b](https://github.com/OlgaTYP/Practicas-continuas/commit/177189b), [PR #23](https://github.com/OlgaTYP/Practicas-continuas/pull/23)). Node busca los módulos subiendo por los directorios, así que `marked`, instalada en la raíz del repositorio, la encuentra también el script de `docs/`.
+
+#### 7. Comprobación
+
+Tras la ejecución correcta, la web responde en <https://olgatyp.github.io/Practicas-continuas/>. El índice enlaza a las seis memorias (`boletin1A.html`, `boletin1B.html`, `boletin2.html` … `boletin5.html`) y cada página muestra el contenido completo del boletín con sus tablas y bloques de código. Esta web es la documentación que se entrega.
 
 ## Capturas de pantalla y otras evidencias
 
 - Ejecuciones del workflow `Release`: [push a main](https://github.com/OlgaTYP/Practicas-continuas/actions/runs/40214227581) y [etiqueta v1.0.0](https://github.com/OlgaTYP/Practicas-continuas/actions/runs/40215844961).
 - Paquete en GHCR con los tags `latest`, `sha-7f60608`, `1.0.0`, `1.0` y `1`: [ghcr.io/olgatyp/practicas-continuas](https://github.com/users/OlgaTYP/packages/container/package/practicas-continuas).
 - Release: [v1.0.0 — Primera versión publicable](https://github.com/OlgaTYP/Practicas-continuas/releases/tag/v1.0.0).
+- Ejecuciones del workflow de Pages: [fallida (PR #22)](https://github.com/OlgaTYP/Practicas-continuas/actions/runs/40231217234) y [correcta (PR #23)](https://github.com/OlgaTYP/Practicas-continuas/actions/runs/40233030276).
+- Web publicada: [olgatyp.github.io/Practicas-continuas](https://olgatyp.github.io/Practicas-continuas/).
 - Las salidas de terminal de los _digests_ (Parte B) y de la verificación de la imagen con `docker pull`, `docker ps` y `curl` (Parte C) están incluidas como texto en sus apartados.
