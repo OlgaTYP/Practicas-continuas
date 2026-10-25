@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main, feat/ci-pipeline-jobs]
+    branches: [ main ]
   pull_request:
 
 concurrency:
