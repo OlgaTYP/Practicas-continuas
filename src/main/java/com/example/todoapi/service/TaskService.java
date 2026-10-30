@@ -2,14 +2,18 @@ package com.example.todoapi.service;
 
 import com.example.todoapi.exception.BusinessRuleException;
 import com.example.todoapi.exception.ResourceNotFoundException;
+import com.example.todoapi.model.SortDirection;
 import com.example.todoapi.model.Task;
 import com.example.todoapi.model.TaskPriority;
+import com.example.todoapi.model.TaskSortField;
 import com.example.todoapi.model.TaskStatus;
 import com.example.todoapi.repository.TaskRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,19 +25,32 @@ public class TaskService {
     this.taskRepository = taskRepository;
   }
 
-  public List<Task> getAllTasks(TaskStatus status, TaskPriority priority, String title) {
+  public List<Task> getAllTasks(
+      TaskStatus status,
+      TaskPriority priority,
+      String title,
+      TaskSortField sortBy,
+      SortDirection direction) {
     System.out.println("Obteniendo tareas...");
     String titleFilter =
         title == null || title.isBlank() ? null : title.trim().toLowerCase(Locale.ROOT);
 
-    return taskRepository.findAll().stream()
-        .filter(task -> status == null || task.getStatus() == status)
-        .filter(task -> priority == null || task.getPriority() == priority)
-        .filter(
-            task ->
-                titleFilter == null
-                    || task.getTitle().toLowerCase(Locale.ROOT).contains(titleFilter))
-        .toList();
+    Stream<Task> tasks =
+        taskRepository.findAll().stream()
+            .filter(task -> status == null || task.getStatus() == status)
+            .filter(task -> priority == null || task.getPriority() == priority)
+            .filter(
+                task ->
+                    titleFilter == null
+                        || task.getTitle().toLowerCase(Locale.ROOT).contains(titleFilter));
+
+    if (sortBy == TaskSortField.DEADLINE) {
+      Comparator<LocalDate> order =
+          direction == SortDirection.DESC ? Comparator.reverseOrder() : Comparator.naturalOrder();
+      tasks = tasks.sorted(Comparator.comparing(Task::getDeadline, Comparator.nullsLast(order)));
+    }
+
+    return tasks.toList();
   }
 
   public Task getTaskById(Long id) {

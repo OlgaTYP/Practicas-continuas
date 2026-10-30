@@ -215,6 +215,16 @@ Los filtros pueden combinarse, por ejemplo:
 curl "http://localhost:8080/api/tasks?status=TODO&priority=HIGH&title=sprint"
 ```
 
+También se pueden ordenar por fecha límite con `sortBy=deadline` y `direction=asc|desc` (por defecto `asc`). Si no se indica `sortBy`, se mantiene el orden actual. La ordenación se puede combinar con los filtros:
+
+```bash
+curl "http://localhost:8080/api/tasks?sortBy=deadline"
+curl "http://localhost:8080/api/tasks?sortBy=deadline&direction=desc"
+curl "http://localhost:8080/api/tasks?status=TODO&sortBy=deadline&direction=asc"
+```
+
+Un valor no válido en `sortBy` o `direction` devuelve `400 Bad Request`.
+
 Si no hay tareas coincidentes, la API devuelve `200 OK` con una lista vacía.
 
 Respuesta esperada (ejemplo):
