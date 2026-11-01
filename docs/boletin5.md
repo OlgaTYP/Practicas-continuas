@@ -161,6 +161,8 @@ Los tres niveles semver permiten que cada usuario elija cuánto quiere actualiza
 
 Tras el primer push a `main`, la imagen apareció en la pestaña **Packages** del repositorio ([ghcr.io/olgatyp/practicas-continuas](https://github.com/users/OlgaTYP/packages/container/package/practicas-continuas)) con los tags `sha-7f60608` y `latest`.
 
+![Paquete practicas-continuas en GHCR, público, con los tags latest y sha-7f60608](img/boletin5/packages-sha-latest.png)
+
 El comportamiento se repitió con cada fusión posterior: los merges de los PR #22 y #23 (Parte D) publicaron `sha-18f2416` y `sha-fbb610d`, y `latest` pasó a apuntar a la imagen más reciente de `main`. En cambio, `1.0.0`, `1.0` y `1` siguen apuntando a la imagen de la versión etiquetada.
 
 ### Parte B — Publicar una versión de verdad
@@ -173,6 +175,8 @@ git push origin v1.0.0
 ```
 
 Una etiqueta **anotada** es un objeto propio de Git, con autor (Roxana Bareiro), fecha y mensaje, a diferencia de una etiqueta ligera, que es solo un puntero a un commit. Es la forma recomendada para marcar versiones.
+
+![Etiqueta v1.0.0 en la pestaña Tags, creada por rmbgeuskadi sobre el commit 7f60608](img/boletin5/release-workflow-tag.png)
 
 El push de la etiqueta volvió a disparar el workflow `Release`. El historial de ejecuciones muestra tres, todas correctas:
 
@@ -192,7 +196,11 @@ sha-7f60608  sha256:a68c2e78dbebeca0ec47f4b0bcbe095fc3cc5e13af7ab1fa3a8a84439197
 1            sha256:a68c2e78dbebeca0ec47f4b0bcbe095fc3cc5e13af7ab1fa3a8a84439197a827
 ```
 
+![Paquete practicas-continuas con los tags latest, 1, 1.0, 1.0.0 y sha-7f60608 en la misma versión](img/boletin5/packages-semver.png)
+
 Por último, se creó la **Release** [v1.0.0 — Primera versión publicable](https://github.com/OlgaTYP/Practicas-continuas/releases/tag/v1.0.0) a partir de la etiqueta, con **Generate release notes**. GitHub generó automáticamente la lista de PR incluidos en la versión (del #3 al #21) y los nuevos contribuidores: @luciaolmosmartinez, de la pareja que contribuyó desde el fork, @rmbgeuskadi y @OlgaTYP.
+
+![Release «v1.0.0 — Primera versión publicable» marcada como Latest, sobre la etiqueta v1.0.0 y el commit 7f60608](img/boletin5/release-v1.0.0.png)
 
 ### Parte C — Verificar la imagen publicada
 
@@ -380,6 +388,8 @@ La primera ejecución falló porque el runner parte de una máquina limpia y el 
 
 Tras la ejecución correcta, la web responde en <https://olgatyp.github.io/Practicas-continuas/>. El índice enlaza a las seis memorias (`boletin1A.html`, `boletin1B.html`, `boletin2.html` … `boletin5.html`) y cada página muestra el contenido completo del boletín con sus tablas y bloques de código. Esta web es la documentación que se entrega.
 
+![Settings → Pages: «Your site is live at https://olgatyp.github.io/Practicas-continuas/», desplegado por el workflow](img/boletin5/pages-workflow.png)
+
 ## Capturas de pantalla y otras evidencias
 
 - Ejecuciones del workflow `Release`: [push a main](https://github.com/OlgaTYP/Practicas-continuas/actions/runs/40214227581) y [etiqueta v1.0.0](https://github.com/OlgaTYP/Practicas-continuas/actions/runs/40215844961).
@@ -387,4 +397,5 @@ Tras la ejecución correcta, la web responde en <https://olgatyp.github.io/Pract
 - Release: [v1.0.0 — Primera versión publicable](https://github.com/OlgaTYP/Practicas-continuas/releases/tag/v1.0.0).
 - Ejecuciones del workflow de Pages: [fallida (PR #22)](https://github.com/OlgaTYP/Practicas-continuas/actions/runs/40231217234) y [correcta (PR #23)](https://github.com/OlgaTYP/Practicas-continuas/actions/runs/40233030276).
 - Web publicada: [olgatyp.github.io/Practicas-continuas](https://olgatyp.github.io/Practicas-continuas/).
+- Capturas incluidas en su apartado: paquete con `sha-7f60608` y `latest` (Parte A); etiqueta `v1.0.0`, paquete con los tags semver y Release (Parte B); página de GitHub Pages publicada (Parte D).
 - Las salidas de terminal de los _digests_ (Parte B) y de la verificación de la imagen con `docker pull`, `docker ps` y `curl` (Parte C) están incluidas como texto en sus apartados.
