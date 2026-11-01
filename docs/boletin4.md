@@ -1,5 +1,8 @@
 # Boletín 4: Integración continua con GitHub Actions
 
+> Pareja: Olga Yanes ([@OlgaTYP](https://github.com/OlgaTYP)) y Roxana Bareiro ([@rmbgeuskadi](https://github.com/rmbgeuskadi)).
+> Repositorio: [OlgaTYP/Practicas-continuas](https://github.com/OlgaTYP/Practicas-continuas)
+
 ## Resumen de commits
 
 | #   | Mensaje del commit                                      | Qué se hizo                                                                                                                    | Autor          | Enlace                                                                   |
