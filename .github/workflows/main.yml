@@ -88,12 +88,18 @@ jobs:
                 body: `## Resumen de cambios generado por IA\n\n${summary}`
               });
             } catch (error) {
-              core.warning("La revisión de IA ha fallado.");
-
-              await github.rest.issues.createComment({
-                owner,
-                repo,
-                issue_number: prNumber,
-                body: "La IA ha fallado"
-              });
+              core.warning(`La revisión de IA ha fallado: ${error.message}`);
+            
+              try {
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  body: "La IA no ha podido completar la revisión. Consulta los logs de GitHub Actions."
+                });
+              } catch (commentError) {
+                core.warning(
+                  `No se pudo publicar el comentario: ${commentError.message}`
+                );
+              }
             }

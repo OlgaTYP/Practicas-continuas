@@ -123,6 +123,8 @@ docker run hello-world
 
 Los dos primeros comandos mostraron las versiones de Docker Engine y Docker Compose. `hello-world` descargó la imagen de prueba desde Docker Hub, creó un contenedor y mostró el mensaje de bienvenida, lo que confirma que el motor funciona y tiene acceso al registry.
 
+![docker compose version, docker --version y docker run hello-world en PowerShell](img/boletin3/01-HelloDocker.png)
+
 ### Parte B — Endpoint de salud
 
 Se añadió Spring Boot Actuator al `pom.xml` ([d1cd2f2](https://github.com/OlgaTYP/Practicas-continuas/commit/d1cd2f2)) y se expusieron únicamente los endpoints necesarios ([bc68569](https://github.com/OlgaTYP/Practicas-continuas/commit/bc68569)):
@@ -237,6 +239,8 @@ docker compose up --build -d
 docker compose ps            # ambos servicios (healthy)
 docker compose logs -f api
 ```
+
+![docker compose ps con practicas-continuas-api-1 y practicas-continuas-db-1 en estado (healthy)](img/boletin3/02-dockerPs.png)
 
 Se creó una tarea con los campos de nuestra entidad:
 
@@ -467,6 +471,8 @@ Pasos seguidos:
    docker push olgatyp/pc-todo-api:1.0
    ```
 
+   ![Etiqueta 1.0 de olgatyp/pc-todo-api publicada en Docker Hub (linux/amd64, 152,85 MB comprimida)](img/boletin3/03-publica-todo-api.png)
+
 5. **Verificar** que se puede descargar:
 
    ```bash
@@ -540,11 +546,10 @@ La batería de tests de spring-petclinic se ejecuta de forma reproducible en un 
 
 ## 4. Capturas de pantalla y otras evidencias
 
-Se adjuntan capturas de:
+Las capturas están incluidas en su apartado:
 
 1. `docker --version`, `docker compose version` y `docker run hello-world` (Parte A).
-2. Salida de `docker compose ps` (Parte D).
+2. Salida de `docker compose ps` con los dos servicios `(healthy)` (Parte D).
+3. Etiqueta `1.0` de `olgatyp/pc-todo-api` publicada en Docker Hub (Parte H).
 
-Las salidas de terminal de `docker images tareas-api`, `time docker build` con los dos órdenes del Dockerfile, `docker ps` con los contenedores `(healthy)` y la prueba de persistencia con `down` / `down -v` están incluidas como texto en las Partes C y D.
-3. Publicación y descarga de `olgatyp/pc-todo-api:1.0` (Parte H).
-4. Construcción de `petclinic-tests:1.0` y resultado de Maven con `BUILD SUCCESS` (Parte I).
+Las salidas de terminal de `docker images tareas-api`, `time docker build` con los dos órdenes del Dockerfile, `docker ps` con los contenedores `(healthy)` y la prueba de persistencia con `down` / `down -v` están incluidas como texto en las Partes C y D. Las de `docker pull` y del resultado de los tests de spring-petclinic, en las Partes H e I.

@@ -1,8 +1,10 @@
 package com.example.todoapi.controller;
 
 import com.example.todoapi.dto.TaskRequest;
+import com.example.todoapi.model.SortDirection;
 import com.example.todoapi.model.Task;
 import com.example.todoapi.model.TaskPriority;
+import com.example.todoapi.model.TaskSortField;
 import com.example.todoapi.model.TaskStatus;
 import com.example.todoapi.service.TaskService;
 import jakarta.validation.Valid;
@@ -33,8 +35,15 @@ public class TaskController {
   public List<Task> getAllTasks(
       @RequestParam(required = false) TaskStatus status,
       @RequestParam(required = false) TaskPriority priority,
-      @RequestParam(required = false) String title) {
-    return taskService.getAllTasks(status, priority, title);
+      @RequestParam(required = false) String title,
+      @RequestParam(required = false) String sortBy,
+      @RequestParam(required = false) String direction) {
+    return taskService.getAllTasks(
+        status,
+        priority,
+        title,
+        TaskSortField.fromValue(sortBy),
+        SortDirection.fromValue(direction));
   }
 
   @GetMapping("/{id}")

@@ -10,8 +10,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.todoapi.dto.TaskRequest;
+import com.example.todoapi.model.SortDirection;
 import com.example.todoapi.model.Task;
 import com.example.todoapi.model.TaskPriority;
+import com.example.todoapi.model.TaskSortField;
 import com.example.todoapi.model.TaskStatus;
 import com.example.todoapi.service.TaskService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,7 +67,8 @@ class TaskControllerTest {
 
   @Test
   void getAllTasks_withFilters_passesFiltersToService() throws Exception {
-    when(taskService.getAllTasks(TaskStatus.DONE, TaskPriority.URGENT, "review"))
+    when(taskService.getAllTasks(
+            TaskStatus.DONE, TaskPriority.URGENT, "review", null, SortDirection.ASC))
         .thenReturn(List.of());
 
     mockMvc
@@ -76,27 +79,31 @@ class TaskControllerTest {
                 .param("title", "review"))
         .andExpect(status().isOk());
 
-    verify(taskService).getAllTasks(TaskStatus.DONE, TaskPriority.URGENT, "review");
+    verify(taskService)
+        .getAllTasks(TaskStatus.DONE, TaskPriority.URGENT, "review", null, SortDirection.ASC);
   }
 
   @Test
   void getAllTasks_withPriorityParam_passesFilterToService() throws Exception {
-    when(taskService.getAllTasks(null, TaskPriority.HIGH, null)).thenReturn(List.of());
+    when(taskService.getAllTasks(null, TaskPriority.HIGH, null, null, SortDirection.ASC))
+        .thenReturn(List.of());
 
     mockMvc.perform(get("/api/tasks").param("priority", "HIGH")).andExpect(status().isOk());
 
-    verify(taskService).getAllTasks(null, TaskPriority.HIGH, null);
+    verify(taskService).getAllTasks(null, TaskPriority.HIGH, null, null, SortDirection.ASC);
   }
 
   @Test
   void getAllTasks_withStatusAndPriorityParams_passesBothFiltersToService() throws Exception {
-    when(taskService.getAllTasks(TaskStatus.TODO, TaskPriority.HIGH, null)).thenReturn(List.of());
+    when(taskService.getAllTasks(TaskStatus.TODO, TaskPriority.HIGH, null, null, SortDirection.ASC))
+        .thenReturn(List.of());
 
     mockMvc
         .perform(get("/api/tasks").param("status", "TODO").param("priority", "HIGH"))
         .andExpect(status().isOk());
 
-    verify(taskService).getAllTasks(TaskStatus.TODO, TaskPriority.HIGH, null);
+    verify(taskService)
+        .getAllTasks(TaskStatus.TODO, TaskPriority.HIGH, null, null, SortDirection.ASC);
   }
 
   @Test
@@ -111,5 +118,51 @@ class TaskControllerTest {
     mockMvc
         .perform(get("/api/tasks").param("priority", "NOT_A_PRIORITY"))
         .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void getAllTasks_withSortByDeadline_defaultsToAscending() throws Exception {
+    mockMvc.perform(get("/api/tasks").param("sortBy", "deadline")).andExpect(status().isOk());
+
+    verify(taskService).getAllTasks(null, null, null, TaskSortField.DEADLINE, SortDirection.ASC);
+  }
+
+  @Test
+  void getAllTasks_withSortByDeadlineDesc_passesDirectionToService() throws Exception {
+    mockMvc
+        .perform(get("/api/tasks").param("sortBy", "deadline").param("direction", "desc"))
+        .andExpect(status().isOk());
+
+    verify(taskService).getAllTasks(null, null, null, TaskSortField.DEADLINE, SortDirection.DESC);
+  }
+
+  @Test
+  void getAllTasks_withFiltersAndSort_passesAllParamsToService() throws Exception {
+    mockMvc
+        .perform(
+            get("/api/tasks")
+                .param("status", "TODO")
+                .param("sortBy", "deadline")
+                .param("direction", "asc"))
+        .andExpect(status().isOk());
+
+    verify(taskService)
+        .getAllTasks(TaskStatus.TODO, null, null, TaskSortField.DEADLINE, SortDirection.ASC);
+  }
+
+  @Test
+  void getAllTasks_withInvalidSortBy_returnsBadRequest() throws Exception {
+    mockMvc
+        .perform(get("/api/tasks").param("sortBy", "title"))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.message").value("Invalid value 'title' for parameter 'sortBy'"));
+  }
+
+  @Test
+  void getAllTasks_withInvalidDirection_returnsBadRequest() throws Exception {
+    mockMvc
+        .perform(get("/api/tasks").param("sortBy", "deadline").param("direction", "up"))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.message").value("Invalid value 'up' for parameter 'direction'"));
   }
 }
