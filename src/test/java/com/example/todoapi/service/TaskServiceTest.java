@@ -11,8 +11,10 @@ import static org.mockito.Mockito.when;
 
 import com.example.todoapi.exception.BusinessRuleException;
 import com.example.todoapi.exception.ResourceNotFoundException;
+import com.example.todoapi.model.SortDirection;
 import com.example.todoapi.model.Task;
 import com.example.todoapi.model.TaskPriority;
+import com.example.todoapi.model.TaskSortField;
 import com.example.todoapi.model.TaskStatus;
 import com.example.todoapi.repository.TaskRepository;
 import java.time.LocalDate;
@@ -117,7 +119,7 @@ class TaskServiceTest {
     doneTask.setStatus(TaskStatus.DONE);
     when(taskRepository.findAll()).thenReturn(List.of(todoTask, doneTask));
 
-    List<Task> tasks = taskService.getAllTasks(null, null, null);
+    List<Task> tasks = taskService.getAllTasks(null, null, null, null, null);
 
     assertEquals(2, tasks.size()); // Correccion del cambio para provocar fallo
   }
@@ -130,7 +132,7 @@ class TaskServiceTest {
     doneTask.setStatus(TaskStatus.DONE);
     when(taskRepository.findAll()).thenReturn(List.of(todoTask, doneTask));
 
-    List<Task> tasks = taskService.getAllTasks(TaskStatus.TODO, null, null);
+    List<Task> tasks = taskService.getAllTasks(TaskStatus.TODO, null, null, null, null);
 
     assertEquals(1, tasks.size());
     assertEquals(TaskStatus.TODO, tasks.get(0).getStatus());
@@ -144,7 +146,7 @@ class TaskServiceTest {
     nonMatchingTask.setTitle("Write documentation");
     when(taskRepository.findAll()).thenReturn(List.of(matchingTask, nonMatchingTask));
 
-    List<Task> tasks = taskService.getAllTasks(null, null, "sPrInT");
+    List<Task> tasks = taskService.getAllTasks(null, null, "sPrInT", null, null);
 
     assertEquals(1, tasks.size());
     assertEquals("Prepare Sprint Review", tasks.get(0).getTitle());
@@ -175,7 +177,8 @@ class TaskServiceTest {
     when(taskRepository.findAll())
         .thenReturn(List.of(matchingTask, wrongStatusTask, wrongPriorityTask, wrongTitleTask));
 
-    List<Task> tasks = taskService.getAllTasks(TaskStatus.TODO, TaskPriority.HIGH, "sprint");
+    List<Task> tasks =
+        taskService.getAllTasks(TaskStatus.TODO, TaskPriority.HIGH, "sprint", null, null);
 
     assertEquals(1, tasks.size());
     assertEquals("Prepare Sprint Review", tasks.get(0).getTitle());
@@ -186,7 +189,7 @@ class TaskServiceTest {
     Task task = buildTask(LocalDate.now().plusDays(2));
     when(taskRepository.findAll()).thenReturn(List.of(task));
 
-    List<Task> tasks = taskService.getAllTasks(null, null, "missing");
+    List<Task> tasks = taskService.getAllTasks(null, null, "missing", null, null);
 
     assertTrue(tasks.isEmpty());
   }
@@ -199,7 +202,7 @@ class TaskServiceTest {
     lowPriorityTask.setPriority(TaskPriority.LOW);
     when(taskRepository.findAll()).thenReturn(List.of(highPriorityTask, lowPriorityTask));
 
-    List<Task> tasks = taskService.getAllTasks(null, TaskPriority.HIGH, null);
+    List<Task> tasks = taskService.getAllTasks(null, TaskPriority.HIGH, null, null, null);
 
     assertEquals(1, tasks.size());
     assertEquals(TaskPriority.HIGH, tasks.get(0).getPriority());
@@ -219,11 +222,75 @@ class TaskServiceTest {
     when(taskRepository.findAll())
         .thenReturn(List.of(matchingTask, wrongStatusTask, wrongPriorityTask));
 
-    List<Task> tasks = taskService.getAllTasks(TaskStatus.TODO, TaskPriority.HIGH, null);
+    List<Task> tasks =
+        taskService.getAllTasks(TaskStatus.TODO, TaskPriority.HIGH, null, null, null);
 
     assertEquals(1, tasks.size());
     assertEquals(TaskStatus.TODO, tasks.get(0).getStatus());
     assertEquals(TaskPriority.HIGH, tasks.get(0).getPriority());
+  }
+
+  @Test
+  void getAllTasks_withoutSort_keepsRepositoryOrder() {
+    Task laterTask = buildTask(LocalDate.now().plusDays(5));
+    Task soonerTask = buildTask(LocalDate.now().plusDays(1));
+    when(taskRepository.findAll()).thenReturn(List.of(laterTask, soonerTask));
+
+    List<Task> tasks = taskService.getAllTasks(null, null, null, null, null);
+
+    assertEquals(List.of(laterTask, soonerTask), tasks);
+  }
+
+  @Test
+  void getAllTasks_sortByDeadlineAsc_returnsClosestDeadlinesFirst() {
+    Task laterTask = buildTask(LocalDate.now().plusDays(5));
+    Task soonerTask = buildTask(LocalDate.now().plusDays(1));
+    Task middleTask = buildTask(LocalDate.now().plusDays(3));
+    when(taskRepository.findAll()).thenReturn(List.of(laterTask, soonerTask, middleTask));
+
+    List<Task> tasks =
+        taskService.getAllTasks(null, null, null, TaskSortField.DEADLINE, SortDirection.ASC);
+
+    assertEquals(List.of(soonerTask, middleTask, laterTask), tasks);
+  }
+
+  @Test
+  void getAllTasks_sortByDeadlineDesc_returnsFurthestDeadlinesFirst() {
+    Task laterTask = buildTask(LocalDate.now().plusDays(5));
+    Task soonerTask = buildTask(LocalDate.now().plusDays(1));
+    Task middleTask = buildTask(LocalDate.now().plusDays(3));
+    when(taskRepository.findAll()).thenReturn(List.of(soonerTask, laterTask, middleTask));
+
+    List<Task> tasks =
+        taskService.getAllTasks(null, null, null, TaskSortField.DEADLINE, SortDirection.DESC);
+
+    assertEquals(List.of(laterTask, middleTask, soonerTask), tasks);
+  }
+
+  @Test
+  void getAllTasks_sortByDeadlineWithoutDirection_defaultsToAscending() {
+    Task laterTask = buildTask(LocalDate.now().plusDays(5));
+    Task soonerTask = buildTask(LocalDate.now().plusDays(1));
+    when(taskRepository.findAll()).thenReturn(List.of(laterTask, soonerTask));
+
+    List<Task> tasks = taskService.getAllTasks(null, null, null, TaskSortField.DEADLINE, null);
+
+    assertEquals(List.of(soonerTask, laterTask), tasks);
+  }
+
+  @Test
+  void getAllTasks_withStatusFilterAndSort_filtersAndSorts() {
+    Task laterTodoTask = buildTask(LocalDate.now().plusDays(5));
+    Task soonerTodoTask = buildTask(LocalDate.now().plusDays(2));
+    Task doneTask = buildTask(LocalDate.now().plusDays(1));
+    doneTask.setStatus(TaskStatus.DONE);
+    when(taskRepository.findAll()).thenReturn(List.of(laterTodoTask, doneTask, soonerTodoTask));
+
+    List<Task> tasks =
+        taskService.getAllTasks(
+            TaskStatus.TODO, null, null, TaskSortField.DEADLINE, SortDirection.ASC);
+
+    assertEquals(List.of(soonerTodoTask, laterTodoTask), tasks);
   }
 
   private Task buildTask(LocalDate deadline) {
