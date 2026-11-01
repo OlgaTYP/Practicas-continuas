@@ -205,11 +205,11 @@ Para probar el `lint` se desordenó la indentación de `TaskController` y se hiz
 
 Después se corrigió el formato (commit 12), se hizo push y el pipeline pasó entero a verde (PR #13).
 
-<!-- Capturas: sustituir por las imágenes reales -->
+![Ejecución «test: comprobar que lint bloquea el pipeline»: lint en rojo y test/package sin ejecutarse](img/boletin4/lint-fallido.png)
 
-![Job lint fallido y test/package omitidos](img/boletin4/lint-fallido.png)
-![Informe de tests "Resultados JUnit"](img/boletin4/informe-tests.png)
-![Artefacto app-jar generado](img/boletin4/app-jar.png)
+Con el pipeline en verde, el job `package` subió el artefacto `app-jar`, que se puede descargar desde el resumen de la ejecución y contiene el JAR ejecutable:
+
+![todo-api.jar descargado del artefacto app-jar](img/boletin4/todo-api.png)
 
 **¿Por qué es útil que `lint` vaya primero?**
 Es el job más rápido y barato: no compila ni ejecuta tests. Si el formato es incorrecto el PR no se va a poder fusionar de todas formas, así que no tiene sentido gastar minutos en tests y empaquetado. Además el error queda claro: si falla `lint` el problema es de formato y no de lógica. Es el principio de _fail fast_.
@@ -232,9 +232,9 @@ En _Settings → Branches_ se editó la regla de protección de `main` del Bolet
 
 Para comprobarlo se abrió el PR #16 con un test que siempre falla (commit 14). El job `test` se puso en rojo, `package` no se ejecutó y GitHub mostró el botón de merge deshabilitado con el aviso de que faltaban checks obligatorios. Al corregir el test (commit 15) los tres checks pasaron a verde y el PR se pudo fusionar.
 
-<!-- Captura: sustituir por la imagen real -->
+![Checks del commit db19ff1 en el PR #16: lint en verde, test en rojo y package sin ejecutar](img/boletin4/merge-bloqueado.png)
 
-![Merge bloqueado por checks obligatorios](img/boletin4/merge-bloqueado.png)
+![Checks del commit 1ffb898 tras corregir el test: lint, test y package en verde, tanto en push como en pull_request](img/boletin4/todo-revisado.png)
 
 ### Parte E
 
@@ -248,5 +248,9 @@ Para comprobarlo se abrió el PR #16 con un test que siempre falla (commit 14). 
 La API key de Ollama **no está en el repositorio**. Se guardó como secreto en _Settings → Secrets and variables → Actions_ con el nombre `OLLAMA_PC_API_KEY` y el workflow la lee con `${{ secrets.OLLAMA_PC_API_KEY }}` como variable de entorno. GitHub cifra los secretos, los oculta en los logs (`***`) y no los pasa a workflows lanzados desde forks.
 
 Hubo que hacer dos ajustes: dar permiso `pull-requests: write` para poder comentar (commit 17) y corregir el nombre del secreto, que al principio no coincidía con el creado en GitHub y hacía que se publicase “La IA ha fallado” (commits 18 y 19, PR #19).
+
+Con el secreto corregido, el bot `github-actions` publicó el resumen en el PR:
+
+![Comentario «Resumen de cambios generado por IA» publicado por github-actions en el PR #19](img/boletin4/comentario-1a.png)
 
 **Badge del CI.** Se añadió al principio del `README.md` el badge del workflow `ci.yml` en la rama `main` (commit 20, PR #20). Muestra en todo momento si el último pipeline de `main` está en verde o en rojo.

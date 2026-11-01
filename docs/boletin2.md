@@ -176,9 +176,17 @@ En cada ciclo se creó el Issue con la plantilla de mejora y su etiqueta, una ra
 
 En el PR #6 hubo además una ronda de corrección: tras fusionarse el PR #7 hubo que integrar `main` en la rama, la aprobación previa se descartó y se volvió a revisar antes de fusionar.
 
+Los conflictos de esa integración se resolvieron con el editor de GitHub (*Resolve conflicts*). Los dos PR habían añadido un parámetro nuevo a `getAllTasks` (título y prioridad), y GitHub marcó conflicto en cuatro ficheros. En cada bloque se combinaron ambos cambios, para que el método recibiera estado, prioridad y título:
+
+![Conflicto del PR #6 en TaskServiceTest: la rama añade el filtro por título y main el de prioridad](img/boletin2/conflicto-1.jpg)
+
+![Los cuatro ficheros en conflicto del PR #6 resueltos en el editor de GitHub, listos para «Commit merge»](img/boletin2/resolucion-conflicto.jpg)
+
 ### Parte E — Provocar un conflicto en un PR
 
 1. Desde el mismo commit de `main` se crearon `feat/conflicto-1` (prioridad por defecto `HIGH`) y `feat/conflicto-2` (prioridad por defecto `LOW`), que modificaban la misma línea.
+   ![Cambio de la rama feat/conflicto-1: la prioridad por defecto pasa de MEDIUM a HIGH en TaskService](img/boletin2/conflicto-2.jpg)
+
 2. La primera se fusionó vía [PR #8](https://github.com/OlgaTYP/Practicas-continuas/pull/8).
 3. Al abrir el [PR #9](https://github.com/OlgaTYP/Practicas-continuas/pull/9) con la segunda rama, GitHub indicó que había conflictos con `main` y no permitía fusionar.
 4. En local se hizo rebase de la segunda rama sobre `main`, se resolvió el conflicto y se subió la rama reescrita:
@@ -194,6 +202,8 @@ En el PR #6 hubo además una ronda de corrección: tras fusionarse el PR #7 hubo
    ```
 
 5. GitHub actualizó el PR automáticamente (evento _force-pushed_) y el conflicto desapareció. En el historial se ve que el commit [f856bb3](https://github.com/OlgaTYP/Practicas-continuas/commit/f856bb3) ya parte del merge del PR #8 ([f8d93d9](https://github.com/OlgaTYP/Practicas-continuas/commit/f8d93d9)). Tras la aprobación se fusionó.
+
+   ![PR #9 sin conflictos tras el rebase: aprobado por OlgaTYP y fusionado en main por rmbgeuskadi](img/boletin2/pr9-sin-conflicto.png)
 
 ```text
 *   8471b1e Merge pull request #9 from OlgaTYP/feat/conflicto-2
@@ -211,22 +221,25 @@ En el PR #6 hubo además una ronda de corrección: tras fusionarse el PR #7 hubo
 
 ### Parte F — PR con fork
 
-**PR recibido en nuestro repositorio.** Abrimos el Issue [#2](https://github.com/OlgaTYP/Practicas-continuas/issues/2) (filtrar tareas por estado) y la otra pareja (Maria Ballester y Lucía Olmos Martínez), sin permisos de escritura en nuestro repositorio, lo resolvió desde su fork con el [PR #3](https://github.com/OlgaTYP/Practicas-continuas/pull/3). Lo aprobamos las dos y se fusionó.
+**PR recibido en nuestro repositorio.** Abrimos el Issue [#2](https://github.com/OlgaTYP/Practicas-continuas/issues/2) (filtrar tareas por estado) y la otra pareja (Maria Ballester y Lucía Olmos Martínez), sin permisos de escritura en nuestro repositorio, lo resolvió desde su fork con el [PR #3](https://github.com/OlgaTYP/Practicas-continuas/pull/3). Al abrirlo, GitHub pidió automáticamente nuestra revisión como *code owners*. Lo aprobamos las dos y se fusionó.
+
+![PR #3 desde el fork luciaolmosmartinez:filtro-estado: revisión solicitada a las code owners, aprobado por las dos y fusionado](img/boletin2/fork-aprobado-en-mi-repositorio.png)
 
 **PR enviado al repositorio de la otra pareja.** Olga Yanes hizo un fork de [mariaballesteer/Practicas-PC-parejas](https://github.com/mariaballesteer/Practicas-PC-parejas) y resolvió su Issue #1 con el PR **[mariaballesteer/Practicas-PC-parejas#9](https://github.com/mariaballesteer/Practicas-PC-parejas/pull/9)** — _feat: filtrar y ordenar tareas por fecha y prioridad_. El PR amplía el listado de tareas para filtrar por rango de fecha límite y ordenar los resultados, manteniendo los filtros existentes por estado y prioridad. Fue **aprobado y fusionado por @mariaballesteer**. Antes hubo un primer intento ([#8](https://github.com/mariaballesteer/Practicas-PC-parejas/pull/8)) que se cerró sin fusionar y se sustituyó por el #9.
+
+![PR #9 en mariaballesteer/Practicas-PC-parejas desde OlgaTYP:feature/filtro-fechas-orden, aprobado y fusionado por mariaballesteer](img/boletin2/pr-fork-otra-pareja.png)
 
 ---
 
 ## 4. Evidencias (capturas)
 
-Las capturas se entregan en imágenes junto a esta memoria:
+Las capturas están incluidas en su apartado:
 
-1. Intento de push directo a `main` rechazado por GitHub (Parte C).
-2. Regla de protección de `main` configurada (Parte C).
-3. PR #9 abierto con el aviso de conflicto con `main` (Parte E).
-4. Resolución del conflicto en local (rebase y `git push --force-with-lease`) (Parte E).
-5. PR #9 actualizado automáticamente y sin conflictos (Parte E).
-6. PR [mariaballesteer/Practicas-PC-parejas#9](https://github.com/mariaballesteer/Practicas-PC-parejas/pull/9) abierto y aprobado en el repositorio de la otra pareja (Parte F).
+1. Conflicto del PR #6 y su resolución en el editor de GitHub (Parte D).
+2. Cambio de la prioridad por defecto en la rama `feat/conflicto-1` (Parte E).
+3. PR #9 sin conflictos, aprobado y fusionado tras el rebase (Parte E).
+4. PR #3 recibido desde el fork de la otra pareja, con la revisión de las *code owners* (Parte F).
+5. PR [mariaballesteer/Practicas-PC-parejas#9](https://github.com/mariaballesteer/Practicas-PC-parejas/pull/9) aprobado y fusionado en el repositorio de la otra pareja (Parte F).
 
 ---
 
